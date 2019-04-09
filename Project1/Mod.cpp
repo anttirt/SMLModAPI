@@ -12,7 +12,7 @@ bool OnInputKey(EventPropagation&, UPlayerInput* thiz, FKey key, EInputEvent eve
 	return false;
 }
 
-void ModSetup() {
+void ModSetup2() {
 	// regular functions
 	Subscribe<&AFGPlayerController::BeginPlay>(OnBeginPlay);
 
@@ -37,4 +37,10 @@ void ModSetup() {
 		static_assert(std::is_same_v<decltype(thiz), AFGPlayerController*>, "type mismatch!");
 		static_assert(std::is_same_v<decltype(msg), FString*>, "type mismatch!");
 	});
+}
+
+extern "C" {
+	void __declspec(dllexport) ModSetup() {
+		ModSetup2();
+	}
 }

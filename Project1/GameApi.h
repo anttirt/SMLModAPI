@@ -24,6 +24,8 @@ struct HookName<&AFGCharacterBase::GetHealthComponent> {
 	static constexpr const char Name[] = "AFGCharacterBase::execGetHealthComponent";
 };
 
+EXPORT_METHOD(AFGCharacterBase::GetHealthComponent);
+
 class AFGCharacterPlayer : public AFGCharacterBase
 {
 public:

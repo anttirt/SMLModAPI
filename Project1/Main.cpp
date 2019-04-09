@@ -1,8 +1,8 @@
-__declspec(dllimport) void RunGame();
+void RunGame();
 
-void ModSetup();
+__declspec(dllimport) void LoaderSetup();
 
 int main() {
-	ModSetup();
+	LoaderSetup();
 	RunGame();
 }

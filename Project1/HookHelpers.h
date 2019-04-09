@@ -4,6 +4,16 @@
 #include <type_traits>
 #include <functional>
 
+#if defined(MOD_LOADER_DLL)
+#define EXPORT_METHOD(PMF) \
+template struct __declspec(dllexport) HookInvoker<decltype(&PMF), &PMF>; \
+template __declspec(dllexport) void Subscribe<&PMF>(HookInvoker<decltype(&PMF), &PMF>::Handler handler);
+#else
+#define EXPORT_METHOD(PMF) \
+extern template struct __declspec(dllimport) HookInvoker<decltype(&PMF), &PMF>; \
+extern template __declspec(dllimport) void Subscribe<&PMF>(HookInvoker<decltype(&PMF), &PMF>::Handler handler);
+#endif
+
 extern "C" {
 	// LONG WINAPI DetourTransactionBegin(VOID);
 	void __stdcall DetourTransactionBegin();
@@ -34,7 +44,8 @@ struct HookName;
 template <> \
 struct HookName<&PMF> { \
 	static constexpr const char Name[] = #PMF; \
-}
+}; \
+EXPORT_METHOD(PMF)
 
 template <typename T, T>
 struct HookInvoker;
@@ -59,14 +70,17 @@ private:
 	static std::vector<Handler> handlers;
 	static void* original;
 
+	template <typename X>
 	static HookType* GetApply(std::true_type) {
-		return &ApplyVoid;
+		return &ApplyVoid<X>;
 	}
 
+	template <typename X>
 	static HookType* GetApply(std::false_type) {
-		return &Apply;
+		return &Apply<X>;
 	}
 
+	template <typename X>
 	static R __fastcall Apply(C* thiz, A... args) {
 		auto propagate = EventPropagation::Propagate;
 
@@ -81,6 +95,7 @@ private:
 		return ret;
 	}
 
+	template <typename X>
 	static void __fastcall ApplyVoid(C* thiz, A... args) {
 		auto propagate = EventPropagation::Propagate;
 
@@ -95,8 +110,8 @@ private:
 		// only if not already installed
 		if(!original) {
 			DetourTransactionBegin();
-			original = DetourFindFunction("GameBinary.dll", HookName<PMF>::Name);
-			DetourAttach(&original, (void*)GetApply(std::is_same<R, void>{}));
+			original = DetourFindFunction("GameBinary.exe", HookName<PMF>::Name);
+			DetourAttach(&original, (void*)GetApply<R>(std::is_same<R, void>{}));
 			DetourTransactionCommit();
 		}
 	}

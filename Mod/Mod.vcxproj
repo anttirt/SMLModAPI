@@ -20,10 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{BC171582-F04F-4A01-820D-9214B3243AFF}</ProjectGuid>
-    <RootNamespace>Project1</RootNamespace>
+    <ProjectGuid>{5C3B2370-9F5B-46DF-A34D-7846105A9EFF}</ProjectGuid>
+    <RootNamespace>Mod</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
-    <ProjectName>ModLoader</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -120,25 +119,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Detours\src\creatwth.cpp" />
-    <ClCompile Include="..\Detours\src\detours.cpp" />
-    <ClCompile Include="..\Detours\src\disasm.cpp" />
-    <ClCompile Include="..\Detours\src\disolx64.cpp" />
-    <ClCompile Include="..\Detours\src\image.cpp" />
-    <ClCompile Include="..\Detours\src\modules.cpp" />
-    <ClCompile Include="..\Detours\src\uimports.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="LoaderGameApi.cpp" />
+    <ClCompile Include="..\Project1\Mod.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Detours\src\detours.h" />
-    <ClInclude Include="..\Detours\src\detver.h" />
-    <ClInclude Include="GameApi.h" />
-    <ClInclude Include="HookHelpers.h" />
+    <ProjectReference Include="..\Project1\Project1.vcxproj">
+      <Project>{bc171582-f04f-4a01-820d-9214b3243aff}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
