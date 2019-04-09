@@ -4,13 +4,21 @@
 #include <type_traits>
 #include <functional>
 
-typedef struct MODULE* HMODULE;
-HMODULE _gameModule;
+extern "C" {
+	// LONG WINAPI DetourTransactionBegin(VOID);
+	void __stdcall DetourTransactionBegin();
 
-void DetourTransactionBegin() {}
-void* DetourFindFunction(HMODULE, const char* name) { return nullptr; }
-void DetourAttach(void**, void*) {}
-void DetourTransactionCommit() {}
+	// PVOID WINAPI DetourFindFunction(_In_ LPCSTR pszModule,
+	//                                 _In_ LPCSTR pszFunction);
+	void* __stdcall DetourFindFunction(const char* pszModule, const char* pszFunction);
+
+	// LONG WINAPI DetourAttach(_Inout_ PVOID *ppPointer,
+	//                          _In_ PVOID pDetour);
+	long __stdcall DetourAttach(void** ppPointer, void* pDetour);
+
+	// LONG WINAPI DetourTransactionCommit(VOID);
+	void __stdcall DetourTransactionCommit();
+}
 
 enum class EventPropagation {
 	Propagate,
@@ -87,7 +95,7 @@ private:
 		// only if not already installed
 		if(!original) {
 			DetourTransactionBegin();
-			original = DetourFindFunction(_gameModule, HookName<PMF>::Name);
+			original = DetourFindFunction("GameBinary.dll", HookName<PMF>::Name);
 			DetourAttach(&original, (void*)GetApply(std::is_same<R, void>{}));
 			DetourTransactionCommit();
 		}

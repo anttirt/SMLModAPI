@@ -1,4 +1,5 @@
 #include "GameApi.h"
+#include <iostream>
 
 void OnBeginPlay(EventPropagation&, AFGPlayerController* thiz) {
 }
@@ -7,7 +8,8 @@ void OnBeginPlayWrongArguments(EventPropagation&, AFGPlayerController* thiz, int
 }
 
 bool OnInputKey(EventPropagation&, UPlayerInput* thiz, FKey key, EInputEvent event, float amount, bool bGamepad) {
-	return true;
+	std::cout << "Mod InputKey(" << amount << ")" << std::endl;
+	return false;
 }
 
 void ModSetup() {
@@ -35,8 +37,4 @@ void ModSetup() {
 		static_assert(std::is_same_v<decltype(thiz), AFGPlayerController*>, "type mismatch!");
 		static_assert(std::is_same_v<decltype(msg), FString*>, "type mismatch!");
 	});
-}
-
-int main() {
-	ModSetup();
 }
